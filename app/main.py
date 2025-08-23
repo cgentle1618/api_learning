@@ -55,16 +55,8 @@ def root():
     return {"message": "Hello World"}
 
 
-# Testing SQLAlchemy connection
-@app.get("/sqlalchemy")
-def test_posts(db: Session = Depends(get_db)):
-    posts = db.query(models.Post).all()
-    print(posts)
-    return {"status": posts}
-
-
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
-def create_posts(post: schemas.Post, db: Session = Depends(get_db)):
+def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db)):
     new_post = models.Post(**post.dict())
     db.add(new_post)
     db.commit()
@@ -91,7 +83,9 @@ def get_post(id: int, db: Session = Depends(get_db)):
 
 
 @app.put("/posts/{id}")
-def update_post(id: int, updated_post: schemas.Post, db: Session = Depends(get_db)):
+def update_post(
+    id: int, updated_post: schemas.PostCreate, db: Session = Depends(get_db)
+):
 
     post_query = db.query(models.Post).filter(models.Post.id == id)
 
