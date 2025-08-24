@@ -1,9 +1,7 @@
 from fastapi import FastAPI, Body, Response, status, HTTPException, Depends
 from typing import Optional, List
 from random import randrange
-import psycopg2
-from psycopg2.extras import RealDictCursor
-import time
+
 from sqlalchemy.orm import Session
 from . import models, schemas, utils
 from .database import engine, get_db
@@ -13,6 +11,11 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+"""
+# Connecting to the database with psycopg2 (Without SQLAlchemy)
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import time
 
 while True:
     try:
@@ -29,7 +32,7 @@ while True:
         print("Connection to database failed")
         print(f"Error: {e}")
         time.sleep(2)
-
+"""
 
 my_posts = [
     {"title": "title of post 1", "content": "content of post 1", "id": 1},
