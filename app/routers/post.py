@@ -20,21 +20,23 @@ def create_posts(
     return new_post
 
 
-@router.get("/")
+@router.get("/", response_model=List[schemas.Post])
 def get_posts(
     db: Session = Depends(get_db),
-    response_model=List[schemas.Post],
     current_user: int = Depends(oauth2.get_current_user),
 ):
-    posts = db.query(models.Post).all()
+    posts = (
+        db.query(models.Post)
+        .join(models.User, models.Post.owner_id == models.User.id)
+        .all()
+    )
     return posts
 
 
-@router.get("/{id}")
+@router.get("/{id}", response_model=schemas.Post)
 def get_post(
     id: int,
     db: Session = Depends(get_db),
-    response_model=schemas.Post,
     current_user: int = Depends(oauth2.get_current_user),
 ):
     post = db.query(models.Post).filter(models.Post.id == id).first()
@@ -52,12 +54,11 @@ def get_post(
     return post
 
 
-@router.put("/{id}")
+@router.put("/{id}", response_model=schemas.Post)
 def update_post(
     id: int,
     updated_post: schemas.PostCreate,
     db: Session = Depends(get_db),
-    response_model=schemas.Post,
     current_user: int = Depends(oauth2.get_current_user),
 ):
 
