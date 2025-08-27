@@ -1,3 +1,5 @@
+"""Models for the database tables using SQLAlchemy ORM."""
+
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.sql import text
